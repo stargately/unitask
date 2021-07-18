@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "@puncsky/eslint-config-onefx",
+    "@puncsky/eslint-config-onefx-react"
+  ],
+  "rules": {
+    "@typescript-eslint/ban-types": 0,
+    "import/no-extraneous-dependencies": 0
+  },
+  "ignorePatterns": ["src/client/static/**/*"]
+}
