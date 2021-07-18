@@ -42,7 +42,7 @@ export const Setup: React.FC = () => {
 
         <p>
           Unitask flattens all your recent tasks in Github and JIRA into one
-          table.
+          table. If you like it, <a href="https://github.com/stargately/unitask">fork and star it on Github</a>.
         </p>
 
         <Image
