@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ContentPadding } from "@/shared/common/styles/style-padding";
 import Form from "antd/lib/form";
 import TextArea from "antd/lib/input/TextArea";
@@ -33,6 +33,8 @@ export const Setup: React.FC = () => {
     initialValue = JSON.stringify(sample, null, 2);
   }
 
+  const [loading, setLoading] = useState(false);
+
   return (
     <ContentPadding>
       <CommonMargin />
@@ -42,7 +44,11 @@ export const Setup: React.FC = () => {
 
         <p>
           Unitask flattens all your recent tasks in Github and JIRA into one
-          table. If you like it, <a href="https://github.com/stargately/unitask">fork and star it on Github</a>.
+          table. If you like it,{" "}
+          <a href="https://github.com/stargately/unitask">
+            fork and star it on Github
+          </a>
+          .
         </p>
 
         <Image
@@ -108,10 +114,11 @@ export const Setup: React.FC = () => {
       </article>
 
       <Form
-        style={{ maxWidth: "680px" }}
+        style={{ maxWidth: "680px", width: "100%" }}
         onFinish={async (values) => {
           const { setup } = values;
           try {
+            setLoading(true);
             const parsed = JSON.parse(setup);
             await queryTasks(client, "open", parsed);
             notification.success({
@@ -122,6 +129,8 @@ export const Setup: React.FC = () => {
             notification.error({
               message: `invalid setup: ${err}`,
             });
+          } finally {
+            setLoading(false);
           }
         }}
       >
@@ -139,8 +148,8 @@ export const Setup: React.FC = () => {
           />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">
+        <Form.Item>
+          <Button loading={loading} type="primary" htmlType="submit">
             Submit
           </Button>
         </Form.Item>

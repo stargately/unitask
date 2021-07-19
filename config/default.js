@@ -30,7 +30,6 @@ module.exports = {
     },
   },
   analytics: {
-    googleTid: "TODO: replace with your googleTid",
     gaMeasurementId: "G-BFN2ZB74PP",
   },
   csp: {
