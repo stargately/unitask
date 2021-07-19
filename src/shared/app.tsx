@@ -1,7 +1,7 @@
 import { Switch } from "onefx/lib/react-router";
 import { Route } from "onefx/lib/react-router-dom";
 import { styled } from "onefx/lib/styletron-react";
-import React, { useEffect } from "react";
+import React from "react";
 import { Footer } from "@/shared/common/footer";
 import { Head } from "@/shared/common/head";
 import { NotFound } from "@/shared/common/not-found";
@@ -10,17 +10,10 @@ import { fonts } from "@/shared/common/styles/style-font";
 import { TopBar } from "@/shared/common/top-bar";
 import { Home } from "@/shared/home/home";
 import { Setup } from "@/shared/setup";
+import { useGtag } from "@/shared/common/use-gtag";
 
-const initGoogleAnalytics = require("./common/google-analytics");
-
-type Props = {
-  googleTid: string;
-};
-
-export function App(props: Props): JSX.Element {
-  useEffect(() => {
-    initGoogleAnalytics({ tid: props.googleTid });
-  }, []);
+export function App(): JSX.Element {
+  useGtag();
   return (
     <RootStyle>
       <Head />
