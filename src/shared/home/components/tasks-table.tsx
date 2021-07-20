@@ -9,6 +9,8 @@ import { GridApi } from "ag-grid-community";
 import { GridReadyEvent } from "ag-grid-community/dist/lib/events";
 import { Link } from "onefx/lib/react-router-dom";
 import { getSetup } from "@/shared/home/tasks-controller";
+import { styled } from "onefx/lib/styletron-react";
+import { margin } from "polished";
 
 export type TaskText = {
   title?: string | null;
@@ -56,6 +58,19 @@ const dateRenderer = (params: {
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
+
+const Catetory = styled("span", {
+  ...margin(0, "12px", 0, "16px"),
+});
+
+const daysAgo = (days: number) =>
+  new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+const getToday = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today.toISOString().slice(0, 10);
+};
 
 export const TasksTable: React.FC<Props> = ({
   loading,
@@ -106,6 +121,13 @@ export const TasksTable: React.FC<Props> = ({
         dateFrom: closedAfter,
       };
     }
+    const updatedAfter = query.get("updatedAfter");
+    if (updatedAfter) {
+      customFilter.updatedAt = {
+        type: "greaterThan",
+        dateFrom: updatedAfter,
+      };
+    }
     gridApi?.setFilterModel(customFilter);
   };
   const onGridReady = (params: GridReadyEvent) => {
@@ -116,22 +138,36 @@ export const TasksTable: React.FC<Props> = ({
       restoreFromQueryParam();
     }
   }, [location.search, gridApi]);
-  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 10);
+
+  const today = getToday();
 
   return (
     <div className="ag-theme-alpine" style={{ height: "100vh", width: "100%" }}>
       <Button onClick={() => clearFilters()}>Clear Filters</Button>
+
+      <Catetory />
+
       <Button
         onClick={() => history.push(`${location.pathname}?assignees=${myName}`)}
       >
-        My Tasks
+        My tasks
       </Button>
       <Button
         onClick={() =>
           history.push(
-            `${location.pathname}?assignees=${myName}&closedAfter=${weekAgo}`
+            `${location.pathname}?assignees=${myName}&updatedAfter=${today}`
+          )
+        }
+      >
+        My tasks updated today
+      </Button>
+
+      <Catetory />
+
+      <Button
+        onClick={() =>
+          history.push(
+            `${location.pathname}?assignees=${myName}&closedAfter=${daysAgo(7)}`
           )
         }
       >
@@ -139,7 +175,7 @@ export const TasksTable: React.FC<Props> = ({
       </Button>
       <Button
         onClick={() =>
-          history.push(`${location.pathname}?closedAfter=${weekAgo}`)
+          history.push(`${location.pathname}?closedAfter=${daysAgo(7)}`)
         }
       >
         We closed in last 7 days
