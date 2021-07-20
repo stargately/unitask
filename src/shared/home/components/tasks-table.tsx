@@ -63,6 +63,9 @@ const Catetory = styled("span", {
   ...margin(0, "12px", 0, "16px"),
 });
 
+const daysAgo = (days: number) =>
+  new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
 const getToday = () => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -135,10 +138,7 @@ export const TasksTable: React.FC<Props> = ({
       restoreFromQueryParam();
     }
   }, [location.search, gridApi]);
-  const daysAgo = (days: number) =>
-    new Date(Date.now() - days * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .slice(0, 10);
+
   const today = getToday();
 
   return (
