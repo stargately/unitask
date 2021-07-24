@@ -55,6 +55,35 @@ const dateRenderer = (params: {
   }
 };
 
+const filterOptions = [
+  "empty",
+  {
+    displayKey: "blank",
+    displayName: "Empty",
+    test(_filterValue: string, cellValue: string): boolean {
+      return !cellValue;
+    },
+    hideFilterInput: true,
+  },
+  "contains",
+  "notContains",
+  "startsWith",
+  "endsWith",
+  {
+    displayKey: "containsOrEmpty",
+    displayName: "Contains or Empty",
+    test(filterValue: string, cellValue: string): boolean {
+      if (!cellValue) {
+        return true;
+      }
+      return (
+        !!filterValue &&
+        cellValue.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    },
+  },
+];
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -110,7 +139,7 @@ export const TasksTable: React.FC<Props> = ({
     const assignees = query.get("assignees");
     if (assignees) {
       customFilter.assignees = {
-        type: "contains",
+        type: "containsOrEmpty",
         filter: assignees,
       };
     }
@@ -189,6 +218,14 @@ export const TasksTable: React.FC<Props> = ({
         <AgGridColumn
           sortable
           filter="agTextColumnFilter"
+          filterParams={{ filterOptions }}
+          field="project"
+          cellRenderer={getLinkRender("projectUrl", "project")}
+        />
+        <AgGridColumn
+          sortable
+          filter="agTextColumnFilter"
+          filterParams={{ filterOptions }}
           field="milestone"
           cellRenderer={getLinkRender("milestoneUrl", "milestone")}
         />
@@ -196,14 +233,21 @@ export const TasksTable: React.FC<Props> = ({
           width={600}
           sortable
           filter="agTextColumnFilter"
+          filterParams={{ filterOptions }}
           field="title"
           cellRenderer={getLinkRender("url", "title")}
         />
-        <AgGridColumn sortable filter="agTextColumnFilter" field="assignees" />
+        <AgGridColumn
+          sortable
+          filterParams={{ filterOptions }}
+          filter="agTextColumnFilter"
+          field="assignees"
+        />
         <AgGridColumn
           sortable
           filter="agDateColumnFilter"
           field="createdAt"
+          width={170}
           cellRenderer={dateRenderer}
         />
         <AgGridColumn
@@ -211,25 +255,22 @@ export const TasksTable: React.FC<Props> = ({
           sortable
           filter="agDateColumnFilter"
           field="updatedAt"
+          width={170}
           cellRenderer={dateRenderer}
         />
         <AgGridColumn
           sortable
           filter="agDateColumnFilter"
           field="closedAt"
+          width={170}
           cellRenderer={dateRenderer}
         />
         <AgGridColumn
           sortable
           filter="agTextColumnFilter"
+          filterParams={{ filterOptions }}
           field="repo"
           cellRenderer={getLinkRender("repoUrl", "repo")}
-        />
-        <AgGridColumn
-          sortable
-          filter="agTextColumnFilter"
-          field="project"
-          cellRenderer={getLinkRender("projectUrl", "project")}
         />
       </AgGridReact>
     </div>
