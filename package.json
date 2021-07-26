@@ -183,6 +183,7 @@
     "redux": "4.1.0",
     "redux-thunk": "2.3.0",
     "reflect-metadata": "0.1.13",
+    "request-promise": "^4.2.6",
     "safe-json-globals": "2.1.0",
     "shader": "1.0.0",
     "styletron-engine-atomic": "1.4.8",
