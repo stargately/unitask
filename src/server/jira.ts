@@ -1,5 +1,6 @@
 import { JiraOpts } from "@/api-gateway/resolvers/tasks-resolver.types";
-import JiraApi from "jira-client";
+// @ts-ignore
+import JiraApi from "./jira-client.js";
 
 export async function getJiraTasks(jiraOpts?: JiraOpts) {
   if (!jiraOpts) {
