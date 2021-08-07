@@ -134,19 +134,21 @@ export const Setup: React.FC = () => {
           }
         }}
       >
-        <Form.Item
-          label="Setup"
-          name="setup"
-          initialValue={initialValue}
-          rules={[{ required: true, message: "Please input your setup!" }]}
-        >
-          <TextArea
-            style={{
-              fontFamily: 'monaco, Consolas, "Lucida Console", monospace',
-            }}
-            rows={20}
-          />
-        </Form.Item>
+        {!loading && (
+          <Form.Item
+            label="Setup"
+            name="setup"
+            initialValue={initialValue}
+            rules={[{ required: true, message: "Please input your setup!" }]}
+          >
+            <TextArea
+              style={{
+                fontFamily: 'monaco, Consolas, "Lucida Console", monospace',
+              }}
+              rows={20}
+            />
+          </Form.Item>
+        )}
 
         <Form.Item>
           <Button loading={loading} type="primary" htmlType="submit">

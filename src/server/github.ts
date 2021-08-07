@@ -106,7 +106,7 @@ export async function getGithubTasks(
         closedAt: ed.closedAt,
         repo: {
           title: `${ed.repository?.owner?.login}/${ed.repository.name}`,
-          url: ed.repository?.url,
+          url: `${ed.repository?.url}/issues`,
         },
         assignees: ed.assignees?.nodes
           ?.map((n: any) => n?.name || n?.login)

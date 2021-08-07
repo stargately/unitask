@@ -11,6 +11,7 @@ import { Link } from "onefx/lib/react-router-dom";
 import { getSetup } from "@/shared/home/tasks-controller";
 import { styled } from "onefx/lib/styletron-react";
 import { margin } from "polished";
+import { formatDistance } from "date-fns";
 
 export type TaskText = {
   title?: string | null;
@@ -43,13 +44,18 @@ const dateRenderer = (params: {
   data: Record<string, string>;
   value: Date;
 }) => {
+  if (!params.value) {
+    return "";
+  }
   try {
-    return params.value
-      ? new Intl.DateTimeFormat("en-US", {
-          dateStyle: "short",
-          timeStyle: "short",
-        }).format(params.value)
-      : "";
+    const date = new Intl.DateTimeFormat("en-US", {
+      dateStyle: "short",
+      // timeStyle: "short",
+    }).format(params.value);
+    const when = formatDistance(params.value, new Date(), {
+      addSuffix: false,
+    }).replace("about ", "");
+    return `${date}, ${when}`;
   } catch (_) {
     return "";
   }
