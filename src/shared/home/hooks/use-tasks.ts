@@ -9,7 +9,7 @@ export const useTasks = (state: "open" | "closed" | "all", setup: any) => {
       state,
       setup,
     },
-    pollInterval: 600000,
+    pollInterval: 3600000,
   });
   return { loading, data, error, refetch };
 };
