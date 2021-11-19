@@ -12,6 +12,7 @@ import { getSetup } from "@/shared/home/tasks-controller";
 import { styled } from "onefx/lib/styletron-react";
 import { margin } from "polished";
 import { formatDistance } from "date-fns";
+import Search from "antd/lib/input/Search";
 
 export type TaskText = {
   title?: string | null;
@@ -149,6 +150,13 @@ export const TasksTable: React.FC<Props> = ({
         filter: assignees,
       };
     }
+    const notAssignees = query.get("notAssignees");
+    if (notAssignees) {
+      customFilter.assignees = {
+        type: "notContains",
+        filter: notAssignees,
+      };
+    }
     const closedAfter = query.get("closedAfter");
     if (closedAfter) {
       customFilter.closedAt = {
@@ -161,6 +169,13 @@ export const TasksTable: React.FC<Props> = ({
       customFilter.updatedAt = {
         type: "greaterThan",
         dateFrom: updatedAfter,
+      };
+    }
+    const search = query.get("search");
+    if (search) {
+      customFilter.title = {
+        type: "contains",
+        filter: search,
       };
     }
     gridApi?.setFilterModel(customFilter);
@@ -189,6 +204,13 @@ export const TasksTable: React.FC<Props> = ({
       </Button>
       <Button
         onClick={() =>
+          history.push(`${location.pathname}?notAssignees=${myName}`)
+        }
+      >
+        Not my tasks
+      </Button>
+      <Button
+        onClick={() =>
           history.push(
             `${location.pathname}?assignees=${myName}&updatedAfter=${today}`
           )
@@ -197,24 +219,40 @@ export const TasksTable: React.FC<Props> = ({
         My tasks updated today
       </Button>
 
+      <Search
+        autoComplete="on"
+        placeholder="Filter title"
+        onSearch={(value) =>
+          history.push(`${location.pathname}?search=${value}`)
+        }
+        style={{ width: 200 }}
+      />
+
       <Catetory />
 
-      <Button
-        onClick={() =>
-          history.push(
-            `${location.pathname}?assignees=${myName}&closedAfter=${daysAgo(7)}`
-          )
-        }
-      >
-        I closed in last 7 days
-      </Button>
-      <Button
-        onClick={() =>
-          history.push(`${location.pathname}?closedAfter=${daysAgo(7)}`)
-        }
-      >
-        We closed in last 7 days
-      </Button>
+      {location.pathname.indexOf("open") === -1 && (
+        <>
+          <Button
+            onClick={() =>
+              history.push(
+                `${location.pathname}?assignees=${myName}&closedAfter=${daysAgo(
+                  7
+                )}`
+              )
+            }
+          >
+            I closed in last 7 days
+          </Button>
+          <Button
+            onClick={() =>
+              history.push(`${location.pathname}?closedAfter=${daysAgo(7)}`)
+            }
+          >
+            We closed in last 7 days
+          </Button>
+        </>
+      )}
+
       <AgGridReact
         rowData={tasks}
         rowSelection="multiple"
@@ -225,8 +263,8 @@ export const TasksTable: React.FC<Props> = ({
           sortable
           filter="agTextColumnFilter"
           filterParams={{ filterOptions }}
-          field="project"
-          cellRenderer={getLinkRender("projectUrl", "project")}
+          field="repo"
+          cellRenderer={getLinkRender("repoUrl", "repo")}
         />
         <AgGridColumn
           sortable
@@ -275,8 +313,8 @@ export const TasksTable: React.FC<Props> = ({
           sortable
           filter="agTextColumnFilter"
           filterParams={{ filterOptions }}
-          field="repo"
-          cellRenderer={getLinkRender("repoUrl", "repo")}
+          field="project"
+          cellRenderer={getLinkRender("projectUrl", "project")}
         />
       </AgGridReact>
     </div>
