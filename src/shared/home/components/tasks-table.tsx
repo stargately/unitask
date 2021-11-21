@@ -76,6 +76,7 @@ const filterOptions = [
   "notContains",
   "startsWith",
   "endsWith",
+  "project",
   {
     displayKey: "containsOrEmpty",
     displayName: "Contains or Empty",
