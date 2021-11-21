@@ -171,13 +171,15 @@ export const TasksTable: React.FC<Props> = ({
         dateFrom: updatedAfter,
       };
     }
-    const search = query.get("search");
-    if (search) {
-      customFilter.title = {
-        type: "contains",
-        filter: search,
-      };
-    }
+    ["repo", "milestone", "title"].forEach((t: string): void => {
+      const val = query.get(t);
+      if (val) {
+        customFilter[t] = {
+          type: "contains",
+          filter: val,
+        };
+      }
+    });
     gridApi?.setFilterModel(customFilter);
   };
   const onGridReady = (params: GridReadyEvent) => {
@@ -221,10 +223,9 @@ export const TasksTable: React.FC<Props> = ({
 
       <Search
         autoComplete="on"
-        placeholder="Filter title"
-        onSearch={(value) =>
-          history.push(`${location.pathname}?search=${value}`)
-        }
+        placeholder="Filter"
+        defaultValue="title="
+        onSearch={(value) => history.push(`${location.pathname}?${value}`)}
         style={{ width: 200 }}
       />
 
