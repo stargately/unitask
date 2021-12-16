@@ -13,6 +13,7 @@ import { styled } from "onefx/lib/styletron-react";
 import { margin } from "polished";
 import { formatDistance } from "date-fns";
 import Search from "antd/lib/input/Search";
+import { getSprintStr } from "@/shared/common/quarter";
 
 export type TaskText = {
   title?: string | null;
@@ -194,6 +195,8 @@ export const TasksTable: React.FC<Props> = ({
 
   const today = getToday();
 
+  const sprintNo = getSprintStr(new Date());
+
   return (
     <div className="ag-theme-alpine" style={{ height: "100vh", width: "100%" }}>
       <Button onClick={() => clearFilters()}>Clear Filters</Button>
@@ -231,6 +234,10 @@ export const TasksTable: React.FC<Props> = ({
       />
 
       <Catetory />
+
+      <Link to={`?title=${sprintNo}`}>
+        <Button>{sprintNo}</Button>
+      </Link>
 
       {location.pathname.indexOf("open") === -1 && (
         <>
