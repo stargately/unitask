@@ -8,7 +8,7 @@ export function getYearQuarterSprint(rawDate: Date): [number, number, number] {
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
 
   // quarter
-  const q = Math.floor((d.getMonth() + 1) / 3);
+  const q = Math.floor(d.getMonth() / 3) + 1;
 
   // Get first day of year
   const quarterStart = new Date(Date.UTC(d.getUTCFullYear(), (q - 1) * 3, 1));
